@@ -3,8 +3,10 @@ package jbr.springmvc.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
@@ -40,17 +42,34 @@ public class RequestController {
 	@RequestMapping(method=RequestMethod.POST) 
 	  @ResponseBody
 	  @Transactional
-	public String insertEmployee() {
+	public String insertEmployee(@RequestParam (value="name", required=true) String name,
+			@RequestParam (value="email", required=true) String email,
+			@RequestParam (value="title", required=false) String title,
+			@RequestParam (value="street", required=false) String street,
+			@RequestParam (value="city", required=false) String city,
+			@RequestParam (value="state", required=false) String state,
+			@RequestParam (value="zip", required=false) String zip,
+			@RequestParam (value="managerId", required=false) String managerId,
+			@RequestParam (value="employerId", required=false) String employerId
+			
+			) {
+		
+		
 		EmployeeEntity employee = new EmployeeEntity();
-		employee.setName("Nishta");
-		employee.setAddress("868, S 5th St");
-		employee.setEmail("nishta@sjsu.edu");
-		employee.setTitle("Developer");
+		//String Name = name;
+		System.out.println(name + "Name");
+		employee.setName(name);
+		employee.setEmail(email);
+		employee.setTitle(title);
+		employee.setAddress(street + "," + state + ", " + city + ", " + state + ", " + zip);
+		
+		
+		
+		employee.setEmployer(employerId != null? new Integer(employerId): null);
+		employee.setManager(managerId != null ? new Integer(managerId): null);
 		
 		
 		empdao.addEmployee(employee);
-		System.out.println(manager + "manager");
-		//manager.persist(employee);
 		return "insert-success";
 	}
 	

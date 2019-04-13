@@ -23,9 +23,9 @@ public class EmployeeEntity implements Serializable{
 	private String Email;
 	private String Title;
 	private String Address;
-	private int Employer;
-	private int Manager;
-	private int Collab;
+	private Integer Employer;
+	private Integer Manager;
+	private Integer Collab;
 	
 	
 	public EmployeeEntity() {}
@@ -80,27 +80,27 @@ public class EmployeeEntity implements Serializable{
 		Email = email;
 	}
 
-	public int getCollob() {
+	public Integer getCollob() {
 		return Collab;
 	}
 
-	public void setCollob(int collab) {
+	public void setCollob(Integer collab) {
 		Collab = collab;
 	}
 
-	public int getManager() {
+	public Integer getManager() {
 		return Manager;
 	}
 
-	public void setManager(int manager) {
+	public void setManager(Integer manager) {
 		Manager = manager;
 	}
 
-	public int getEmployer() {
+	public Integer getEmployer() {
 		return Employer;
 	}
 
-	public void setEmployer(int employer) {
+	public void setEmployer(Integer employer) {
 		Employer = employer;
 	}
 	
