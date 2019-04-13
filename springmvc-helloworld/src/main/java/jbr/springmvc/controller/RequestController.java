@@ -50,9 +50,7 @@ public class RequestController {
 			@RequestParam (value="state", required=false) String state,
 			@RequestParam (value="zip", required=false) String zip,
 			@RequestParam (value="managerId", required=false) String managerId,
-			@RequestParam (value="employerId", required=false) String employerId
-			
-			) {
+			@RequestParam (value="employerId", required=false) String employerId) {
 		
 		
 		EmployeeEntity employee = new EmployeeEntity();
@@ -62,9 +60,6 @@ public class RequestController {
 		employee.setEmail(email);
 		employee.setTitle(title);
 		employee.setAddress(street + "," + state + ", " + city + ", " + state + ", " + zip);
-		
-		
-		
 		employee.setEmployer(employerId != null? new Integer(employerId): null);
 		employee.setManager(managerId != null ? new Integer(managerId): null);
 		
