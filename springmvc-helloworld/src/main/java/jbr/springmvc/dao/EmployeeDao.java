@@ -10,4 +10,6 @@ public interface EmployeeDao {
 	public List<EmployeeEntity> getAllEmployees();
 	
 	public void addEmployee(EmployeeEntity employee);
+	
+	public EmployeeEntity getEmployee(Integer employeeId);
 }

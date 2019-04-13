@@ -48,4 +48,10 @@ public class EmployeeDaoImpl implements EmployeeDao{
 		manager.persist(employee);
 		
 	}
+
+	public EmployeeEntity getEmployee(Integer employeeId) {
+		// TODO Auto-generated method stub
+		
+		return manager.find(EmployeeEntity.class, employeeId);
+	}
 }
