@@ -8,4 +8,6 @@ public interface EmployeeDao {
 	//void register(Employee employee);
 	
 	public List<EmployeeEntity> getAllEmployees();
+	
+	public void addEmployee(EmployeeEntity employee);
 }
