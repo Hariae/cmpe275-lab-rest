@@ -28,7 +28,7 @@
         <property name="dataSource" ref="datasource" />
         
         
-        <property name="packagesToScan" value="jbr.springmvc.dao" />
+        <property name="packagesToScan" value="jbr.springmvc.model" />
       <!-- JpaVendorAdapter implementation for Hibernate EntityManager.
            Exposes Hibernate's persistence provider and EntityManager extension interface -->
       <property name="jpaVendorAdapter">

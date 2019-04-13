@@ -1,4 +1,4 @@
-package jbr.springmvc;
+package jbr.springmvc.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

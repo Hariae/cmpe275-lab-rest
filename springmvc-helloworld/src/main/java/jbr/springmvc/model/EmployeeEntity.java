@@ -1,4 +1,4 @@
-package jbr.springmvc.dao;
+package jbr.springmvc.model;
 
 
 import java.io.Serializable;

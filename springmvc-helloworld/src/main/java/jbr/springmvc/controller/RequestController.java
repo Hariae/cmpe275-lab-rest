@@ -1,4 +1,4 @@
-package jbr.springmvc;
+package jbr.springmvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 
 import jbr.springmvc.dao.EmployeeDao;
-import jbr.springmvc.dao.EmployeeEntity;
+import jbr.springmvc.model.EmployeeEntity;
 
 @Controller
 @RequestMapping("/request")
