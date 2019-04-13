@@ -9,15 +9,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import jbr.springmvc.dao.EmployeeDao;
 import jbr.springmvc.model.EmployeeEntity;
 
 @Controller
 @RequestMapping("/request")
-@Transactional
 public class RequestController {
 	@Autowired
 	public EmployeeDao empdao;
+	
+	@PersistenceContext
+    private EntityManager manager;
 	
 	@RequestMapping(method=RequestMethod.GET) 
 	  @ResponseBody
@@ -34,6 +39,7 @@ public class RequestController {
 	
 	@RequestMapping(method=RequestMethod.POST) 
 	  @ResponseBody
+	  @Transactional
 	public String insertEmployee() {
 		EmployeeEntity employee = new EmployeeEntity();
 		employee.setName("Nishta");
@@ -43,6 +49,8 @@ public class RequestController {
 		
 		
 		empdao.addEmployee(employee);
+		System.out.println(manager + "manager");
+		//manager.persist(employee);
 		return "insert-success";
 	}
 	
