@@ -50,13 +50,9 @@ public class EmployerDaoImpl implements EmployerDao{
 		
 	}
 	
-	public EmployerEntity getEmployer(Integer employerId) throws Exception {
+	public EmployerEntity getEmployer(Integer employerId){
 		// TODO Auto-generated method stub
-		try {
-		return manager.find(EmployerEntity.class, employerId);}
-		catch (Exception e) {
-			throw new Exception();
-		}
+		return manager.find(EmployerEntity.class, employerId);
 	}
 	
 	public void updateEmployer(EmployerEntity employer) {
@@ -64,7 +60,7 @@ public class EmployerDaoImpl implements EmployerDao{
 	manager.persist(employer);
 }
 	
-	public void deleteEmployer(Integer employerId) {
+	public void deleteEmployer(Integer employerId){
 		// TODO Auto-generated method stub
 		EmployerEntity x=manager.find(EmployerEntity.class, employerId);
 		  manager.remove(x);

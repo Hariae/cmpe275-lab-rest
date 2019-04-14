@@ -12,7 +12,7 @@ public interface EmployerDao {
 	
 	public void addEmployer(EmployerEntity employer);
 	
-	public EmployerEntity getEmployer (Integer employeeId) throws Exception;
+	public EmployerEntity getEmployer (Integer employeeId);
 	
 
 	public void updateEmployer (EmployerEntity employer);
