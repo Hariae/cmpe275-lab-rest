@@ -60,5 +60,12 @@ public class EmployerDaoImpl implements EmployerDao{
 	// TODO Auto-generated method stub
 	manager.persist(employer);
 }
+	
+	public void deleteEmployer(Integer employerId) {
+		// TODO Auto-generated method stub
+		EmployerEntity x=manager.find(EmployerEntity.class, employerId);
+		  manager.remove(x);
+
+	}
 
 }

@@ -16,4 +16,7 @@ public interface EmployerDao {
 	
 
 	public void updateEmployer (EmployerEntity employer);
+	
+
+public void deleteEmployer (Integer employerId);
 }

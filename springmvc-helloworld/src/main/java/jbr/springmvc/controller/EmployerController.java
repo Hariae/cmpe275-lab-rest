@@ -3,6 +3,7 @@ package jbr.springmvc.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,18 +32,33 @@ public class EmployerController {
 	@PersistenceContext
     private EntityManager manager;
 	
-	@RequestMapping(method=RequestMethod.GET) 
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET) 
 	  @ResponseBody
 	  @Transactional
-	public String getEmployer(@RequestParam (value="id", required=true) String employerId) throws JsonProcessingException {
+	public String getEmployer(@PathVariable("id") String employerId) throws JsonProcessingException {
 		EmployerEntity employer = empdao.getEmployer(new Integer(employerId));
-		System.out.println(employer.getName());
+		//System.out.println(employer.getName());
 		//JsonObject result = Json.createObjectBuilder
 		// Creating Object of ObjectMapper define in Jakson Api 
-      ObjectMapper obj = new ObjectMapper(); 
-      String result = obj.writeValueAsString(employer);
-      
-		return result;
+		if(employer!=null) {
+		Address address = new Address();
+
+		String addressParts[] = employer.getAddress().split(",");
+		address.setStreet(addressParts[0]);
+		address.setCity(addressParts[1]);
+
+		address.setState(addressParts[2]);
+		address.setZip(addressParts[3]);
+		Employer res = new Employer();
+		res.setId(employer.getEmployerId());
+		res.setName(employer.getName());
+		res.setAddress(address);
+		res.setDescription(employer.getName());			
+		ObjectMapper obj = new ObjectMapper(); 
+	      String result = obj.writeValueAsString(res);
+	      return result;
+	}
+		return "unsuccessful";
 	}
 	
 	@RequestMapping(method=RequestMethod.POST) 
@@ -53,22 +69,23 @@ public class EmployerController {
 			@RequestParam (value="city", required=false) String city,
 			@RequestParam (value="state", required=false) String state,
 			@RequestParam (value="zip", required=false) String zip,
-			@RequestParam (value="description", required=false) String description) {
+			@RequestParam (value="description", required=false) String description) throws JsonProcessingException {
 		
 		
 		EmployerEntity employer = new EmployerEntity();
 		System.out.println(name + "Name");
 		employer.setName(name);
 		employer.setAddress((street != null? street : null) + "," + (city != null? city : null) + ", " + (state != null? state : null) + ", " + (zip != null? zip : null) );
+		
 		employer.setDescription(description);
 		empdao.addEmployer(employer);
-		return "insert-success";
+		return getEmployer(String.valueOf(employer.getEmployerId()));
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT) 
+	@RequestMapping(value = "/{id}",method=RequestMethod.PUT) 
 	  @ResponseBody
 	  @Transactional
-	public String updateEmployer(@RequestParam (value="id", required=true) String employerId,
+	public String updateEmployer(@PathVariable("id") String employerId,
 			@RequestParam (value="name", required=true) String name,
 			@RequestParam (value="street", required=false) String street,
 			@RequestParam (value="city", required=false) String city,
@@ -110,6 +127,18 @@ public class EmployerController {
 		else { 
   
 		return "unsuccesful";}
+	}
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.DELETE) 
+	  @ResponseBody
+	  @Transactional
+	public String deleteEmployer(@PathVariable("id") String employerId) throws JsonProcessingException {
+		
+		String result= getEmployer(employerId);
+		empdao.deleteEmployer(new Integer(employerId));
+		System.out.println("deletion");
+  
+		return result;
 	}
 	
 }
