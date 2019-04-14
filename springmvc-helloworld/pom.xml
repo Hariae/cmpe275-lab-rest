@@ -60,12 +60,12 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <!-- Servlet API -->
+<!--         Servlet API
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.version}</version>
-        </dependency>
+        </dependency> -->
         <!-- MySQL database driver -->
         <dependency>
             <groupId>mysql</groupId>
@@ -132,9 +132,11 @@
     <artifactId>activation</artifactId>
     <version>1.1.1</version>
 </dependency>
+
         
     </dependencies>
     <build>
         <finalName>SpringMvcUser</finalName>
+        
     </build>
 </project>

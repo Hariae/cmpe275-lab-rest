@@ -35,6 +35,7 @@ import jbr.springmvc.model.EmployerEntity;
 public class EmployerController {
 	@Autowired
 	public EmployerDao empdao;
+	@Autowired
 	public EmployeeDao employeedao;
 
 	@PersistenceContext
@@ -211,13 +212,16 @@ public class EmployerController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
 		try {
+			System.out.println("hellotry");
 			list = employeedao.getAllEmployees();
+			System.out.println(list);
 			for (EmployeeEntity obj : list) {
-				if (String.valueOf(obj.getEmployer()) == employerId) {
+				if (String.valueOf(obj.getEmployer()).equals(employerId)) {
 					throw new EmployeeExistsException();
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("hello");
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
