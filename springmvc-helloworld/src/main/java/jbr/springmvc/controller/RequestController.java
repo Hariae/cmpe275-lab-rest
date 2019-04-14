@@ -113,6 +113,69 @@ public class RequestController {
 
 		// return "insert-success";
 	}
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.PUT) 
+	  @ResponseBody
+	  @Transactional
+	  public ResponseEntity<String> updateEmployee(
+			  @PathVariable("id") Integer employeeId,
+			  @RequestParam (value="name", required=true) String name,
+			  @RequestParam (value="email", required=true) String email,
+			  @RequestParam (value="title", required=true) String title,
+			  @RequestParam (value="employer", required=true) Integer employer,
+			  @RequestParam (value="manager", required=true) Integer newManager,
+			  @RequestParam (value="address", required=true) String address) throws Exception
+			  {
+		try {
+			if(empdao.getEmployee(employeeId)==null) {
+				System.out.println("no such employee id");
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			}
+		EmployeeEntity employee = empdao.getEmployee(employeeId);
+		
+		System.out.println("get get get get get"+employee.getName());
+		
+//		trying to change manager
+//		Integer oldManager = employee.getManager();
+//		EmployeeEntity oldManagerEntity = empdao.getEmployee(oldManager);
+		String result = null;
+		EmployeeEntity newManagerEntity = empdao.getEmployee(newManager);
+		System.out.println("new Manager id "+newManager);
+//		System.out.println("old Manager company "+oldManagerEntity.getEmployer());
+		System.out.println("new Manager company "+newManagerEntity.getEmployer());
+		ObjectMapper obj = new ObjectMapper(); 
+		System.out.println("updateReturnObj"+obj);
+		if(employer==newManagerEntity.getEmployer()) {
+			System.out.println("success");
+			employee.setName(name);
+			employee.setEmail(email);
+			employee.setTitle(title);
+			employee.setEmployer(employer);
+			employee.setManager(newManager);
+			employee.setAddress(address);
+			empdao.addEmployee(employee);
+			
+				System.out.println("employee is is is "+employee.getEmail());
+				result = obj.writeValueAsString(employee);
+				 return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
+
+			}
+		else {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		}
+		catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			if(java.lang.Double.isNaN(employeeId)) {
+				System.out.println("no id");
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			}
+			 
+//			return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
+			else
+			return new ResponseEntity<String>("400", HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
