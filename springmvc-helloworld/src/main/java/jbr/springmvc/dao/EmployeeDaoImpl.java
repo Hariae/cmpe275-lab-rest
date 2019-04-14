@@ -81,4 +81,12 @@ public class EmployeeDaoImpl implements EmployeeDao{
 		
 		return reportees;
 	}
+
+	public void removeEmployee(Integer employeeId) {
+		// TODO Auto-generated method stub
+		
+		EmployeeEntity employee = manager.find(EmployeeEntity.class, employeeId);
+		manager.remove(employee);
+		//return employeeId;
+	}
 }

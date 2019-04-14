@@ -15,4 +15,6 @@ public interface EmployeeDao {
 	public EmployeeEntity getEmployee(Integer employeeId);
 	
 	public List<EmployeeResult> getReportees(Integer employeeId);
+	
+	public void removeEmployee(Integer employeeId);
 }
