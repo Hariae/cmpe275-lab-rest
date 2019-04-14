@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +44,11 @@ public class EmployerDaoImpl implements EmployerDao{
 	}
 	
 	
-
+	
 	public void addEmployer(EmployerEntity employer) {
-		// TODO Auto-generated method stub
-		System.out.println("manager"+ manager);
-		manager.persist(employer);
-		
+		// TODO Auto-generated method stub		
+			System.out.println("manager"+ manager);
+			manager.persist(employer);
 	}
 	
 	public EmployerEntity getEmployer(Integer employerId){
