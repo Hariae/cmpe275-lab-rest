@@ -126,7 +126,7 @@ public class RequestController {
 			  @RequestParam (value="title", required=true) String title,
 			  @RequestParam (value="employer", required=true) Integer employer,
 			  @RequestParam (value="manager", required=true) Integer newManager,
-			  @RequestParam (value="address", required=true) String address) throws Exception
+			  @RequestParam (value="address", required=false) String address) throws Exception
 			  {
 		try {
 			if(empdao.getEmployee(employeeId)==null) {
@@ -152,9 +152,31 @@ public class RequestController {
 			employee.setName(name);
 			employee.setEmail(email);
 			employee.setTitle(title);
+			
+			/*Employer changes*/
+			
 			employee.setEmployer(employer);
+			
+			
+			List<EmployeeResult> reportees = empdao.getReportees(employeeId);
+			
+			Integer managerId = null;
+			if(employee.getManager() != null) {
+				managerId = employee.getManager();
+			}
+			
+			//edit reportees
+			
+			for(int i=0;i<reportees.size();i++) {
+				EmployeeEntity reportee = empdao.getEmployee(reportees.get(i).getId());
+				reportee.setManager(managerId);
+				empdao.addEmployee(reportee);
+			}
+			
 			employee.setManager(newManager);
-			employee.setAddress(address);
+			/*Employer changes*/
+			
+			//employee.setAddress(address);
 			empdao.addEmployee(employee);
 			
 				System.out.println("employee is is is "+employee.getEmail());
