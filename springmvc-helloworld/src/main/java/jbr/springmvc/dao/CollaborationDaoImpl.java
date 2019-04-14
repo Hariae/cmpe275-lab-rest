@@ -46,4 +46,12 @@ public class CollaborationDaoImpl implements CollaborationDao{
 		return result;
 	}
 
+	public void removeCollaboration(CollaborationEntity collaboration) {
+		// TODO Auto-generated method stub
+		
+		//CollaborationEntity collab = manager.find(CollaborationEntity.class, collaboration.getCollab_Id());
+		manager.remove(collaboration);
+		
+	}
+
 }

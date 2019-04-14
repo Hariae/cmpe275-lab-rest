@@ -34,8 +34,6 @@ public class CollaborationContoller {
 		
 		/*Validation*/
 		try {
-			
-		
 		EmployeeEntity employee_1 = empdao.getEmployee(new Integer(collaborator_1));
 		EmployeeEntity employee_2 = empdao.getEmployee(new Integer(collaborator_2));
 		
@@ -64,5 +62,41 @@ public class CollaborationContoller {
 		}
 		
 		return new ResponseEntity<String>("Add Collaboration Success", HttpStatus.OK);
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseBody
+	@Transactional
+	public ResponseEntity<String> removeCollaboration(@RequestParam(value = "id1", required = true) String collaborator_1, @RequestParam(value = "id2", required = true) String collaborator_2) throws NumberFormatException, Exception {
+		
+		/*Validation*/
+		try {
+		EmployeeEntity employee_1 = empdao.getEmployee(new Integer(collaborator_1));
+		EmployeeEntity employee_2 = empdao.getEmployee(new Integer(collaborator_2));
+		
+		if(employee_1 == null || employee_2 == null) {
+			throw new EmployeeNotFoundException();
+		}
+		}
+		catch(EmployeeNotFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+		/*Validation*/
+		CollaborationEntity collaboration = new CollaborationEntity();
+		collaboration.setCollab_1(new Integer(collaborator_1));
+		collaboration.setCollab_2(new Integer(collaborator_2));
+		/*Is Exist*/
+		CollaborationEntity collab = collabdao.getCollaboration(collaboration);
+		/*Is Exist*/
+		
+		if(collab == null) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+		else {
+			collabdao.removeCollaboration(collab);
+		}
+		//CollaborationEntity collab = collabdao.getCollaboration(collaboration);
+		
+		return new ResponseEntity<String>("Delete success", HttpStatus.OK);
 	}
 }

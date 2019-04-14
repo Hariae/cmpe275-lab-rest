@@ -8,5 +8,7 @@ public interface CollaborationDao {
 	public Integer addCollaboration(CollaborationEntity collaboration);
 	
 	public CollaborationEntity getCollaboration(CollaborationEntity collaboration);
+	
+	public void removeCollaboration(CollaborationEntity collaboration);
 	 
 }
