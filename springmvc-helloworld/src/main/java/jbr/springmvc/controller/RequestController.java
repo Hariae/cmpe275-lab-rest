@@ -57,7 +57,7 @@ public class RequestController {
 			@RequestParam(value = "state", required = false) String state,
 			@RequestParam(value = "zip", required = false) String zip,
 			@RequestParam(value = "managerId", required = false) String managerId,
-			@RequestParam(value = "employerId", required = false) String employerId) {
+			@RequestParam(value = "employerId", required = false) String employerId) throws JsonProcessingException {
 
 		EmployeeEntity employee = new EmployeeEntity();
 		// String Name = name;
@@ -69,8 +69,11 @@ public class RequestController {
 		employee.setEmployer(employerId != null ? new Integer(employerId) : null);
 		employee.setManager(managerId != null ? new Integer(managerId) : null);
 
-		empdao.addEmployee(employee);
-		return "insert-success";
+		Integer employeeId = empdao.addEmployee(employee);
+		
+		return getEmployee(employeeId.toString());
+		
+		//return "insert-success";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

@@ -45,11 +45,12 @@ public class EmployeeDaoImpl implements EmployeeDao{
 		return employees;
 	}
 
-	public void addEmployee(EmployeeEntity employee) {
+	public Integer addEmployee(EmployeeEntity employee) {
 		// TODO Auto-generated method stub
 		System.out.println("manager"+ manager);
 		manager.persist(employee);
 		
+		return employee.getEmployeeId();
 	}
 
 	public EmployeeEntity getEmployee(Integer employeeId) {
