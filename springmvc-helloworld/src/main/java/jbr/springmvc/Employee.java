@@ -3,20 +3,20 @@ package jbr.springmvc;
 import java.util.*;
 
 public class Employee {
-	private long id;
+	private Integer id;
     private String name;
     private String email;
     private String title;
-    private Address address;
+    private Address Address;
     private Employer employer;
-    private Employee Manager;
-    private List<Employee> reports;
+    private EmployeeResult manager;
+    private List<EmployeeResult> Reports;
     private List<Employee> collaborators;
 	
-    public long getId() {
+    public Integer getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -38,10 +38,10 @@ public class Employee {
 		this.title = title;
 	}
 	public Address getAddress() {
-		return address;
+		return Address;
 	}
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setAddress(Address Address) {
+		this.Address = Address;
 	}
 	public Employer getEmployer() {
 		return employer;
@@ -49,17 +49,17 @@ public class Employee {
 	public void setEmployer(Employer employer) {
 		this.employer = employer;
 	}
-	public Employee getManager() {
-		return Manager;
+	public EmployeeResult getManager() {
+		return manager;
 	}
-	public void setManager(Employee manager) {
-		Manager = manager;
+	public void setManager(EmployeeResult manager) {
+		this.manager = manager;
 	}
-	public List<Employee> getReports() {
-		return reports;
+	public List<EmployeeResult> getReports() {
+		return Reports;
 	}
-	public void setReports(List<Employee> reports) {
-		this.reports = reports;
+	public void setReports(List<EmployeeResult> Reports) {
+		this.Reports = Reports;
 	}
 	public List<Employee> getCollaborators() {
 		return collaborators;

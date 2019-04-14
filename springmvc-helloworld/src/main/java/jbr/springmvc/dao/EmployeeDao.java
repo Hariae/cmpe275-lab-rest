@@ -12,4 +12,6 @@ public interface EmployeeDao {
 	public void addEmployee(EmployeeEntity employee);
 	
 	public EmployeeEntity getEmployee(Integer employeeId);
+	
+	public List<EmployeeEntity> getReportees(Integer employeeId);
 }

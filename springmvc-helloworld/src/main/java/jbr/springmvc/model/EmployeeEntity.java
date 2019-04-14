@@ -56,6 +56,8 @@ public class EmployeeEntity implements Serializable{
 	 * 
 	 * public void setEmployerId(int employerId) { EmployerId = employerId; }
 	 */
+	
+	
 	public String getAddress() {
 		return Address;
 	}
@@ -71,6 +73,14 @@ public class EmployeeEntity implements Serializable{
 	public void setTitle(String title) {
 		Title = title;
 	}
+	
+	public Integer getEmployeeId() {
+		return EmployeeId;
+	}
+
+	/*
+	 * public void setEmployeeId(Integer employeeId) { EmployeeId = employeeId; }
+	 */
 
 	public String getEmail() {
 		return Email;

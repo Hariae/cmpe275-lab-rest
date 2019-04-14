@@ -54,4 +54,13 @@ public class EmployeeDaoImpl implements EmployeeDao{
 		
 		return manager.find(EmployeeEntity.class, employeeId);
 	}
+
+	public List<EmployeeEntity> getReportees(Integer employeeId) {
+		// TODO Auto-generated method stub
+		
+		//List<EmployeeEntity> reportees = manager.find(EmployeeEntity.class, manager);
+		
+		
+		return null;
+	}
 }
