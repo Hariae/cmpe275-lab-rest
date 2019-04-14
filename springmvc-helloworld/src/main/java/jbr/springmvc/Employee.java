@@ -11,7 +11,7 @@ public class Employee {
     private Employer employer;
     private EmployeeResult manager;
     private List<EmployeeResult> Reports;
-    private List<Employee> collaborators;
+    private List<CollaboratorResult> collaborators;
 	
     public Integer getId() {
 		return id;
@@ -61,10 +61,10 @@ public class Employee {
 	public void setReports(List<EmployeeResult> Reports) {
 		this.Reports = Reports;
 	}
-	public List<Employee> getCollaborators() {
+	public List<CollaboratorResult> getCollaborators() {
 		return collaborators;
 	}
-	public void setCollaborators(List<Employee> collaborators) {
+	public void setCollaborators(List<CollaboratorResult> collaborators) {
 		this.collaborators = collaborators;
 	}
 

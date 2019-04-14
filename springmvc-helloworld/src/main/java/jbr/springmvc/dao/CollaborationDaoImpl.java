@@ -1,5 +1,6 @@
 package jbr.springmvc.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -52,6 +53,39 @@ public class CollaborationDaoImpl implements CollaborationDao{
 		//CollaborationEntity collab = manager.find(CollaborationEntity.class, collaboration.getCollab_Id());
 		manager.remove(collaboration);
 		
+	}
+	
+	public List<CollaborationEntity> getEmployeeCollaborations(Integer employeeId){
+		List<CollaborationEntity> collaborations = manager.createQuery("Select a From CollaborationEntity a", CollaborationEntity.class).getResultList();
+		List<CollaborationEntity> employeeCollaborations = new ArrayList<CollaborationEntity>();
+		
+		for(int i=0;i<collaborations.size();i++) {
+			if(collaborations.get(i).getCollab_1().equals(employeeId) || collaborations.get(i).getCollab_2().equals(employeeId)){
+				employeeCollaborations.add(collaborations.get(i));
+			}
+		}
+		
+		return employeeCollaborations;
+		
+	}
+
+	public List<Integer> getCollaborators(Integer employeeId) {
+		// TODO Auto-generated method stub
+		List<CollaborationEntity> collaborations = manager.createQuery("Select a From CollaborationEntity a", CollaborationEntity.class).getResultList();
+		List<Integer> collaborators = new ArrayList<Integer>();
+		
+		for(int i=0;i<collaborations.size();i++) {
+			if(collaborations.get(i).getCollab_1().equals(employeeId)){
+				collaborators.add(collaborations.get(i).getCollab_1());
+			}
+			
+			if(collaborations.get(i).getCollab_2().equals(employeeId)) {
+				collaborators.add(collaborations.get(i).getCollab_2());
+			}
+			
+		}
+		
+		return collaborators;
 	}
 
 }

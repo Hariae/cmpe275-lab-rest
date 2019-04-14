@@ -20,11 +20,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import jbr.springmvc.Address;
+import jbr.springmvc.CollaboratorResult;
 import jbr.springmvc.Employee;
 import jbr.springmvc.EmployeeResult;
 import jbr.springmvc.Employer;
+import jbr.springmvc.dao.CollaborationDao;
 import jbr.springmvc.dao.EmployeeDao;
 import jbr.springmvc.dao.EmployerDao;
+import jbr.springmvc.model.CollaborationEntity;
 import jbr.springmvc.model.EmployeeEntity;
 import jbr.springmvc.model.EmployerEntity;
 
@@ -36,6 +39,9 @@ public class RequestController {
 
 	@Autowired
 	public EmployerDao employerdao;
+	
+	@Autowired
+	public CollaborationDao collabdao;
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -62,9 +68,7 @@ public class RequestController {
 
 			throws Exception {
 
-		try {
-
-			EmployeeEntity employee = new EmployeeEntity();
+					EmployeeEntity employee = new EmployeeEntity();
 			// String Name = name;
 			System.out.println(name + "Name");
 			employee.setName(name);
@@ -107,9 +111,7 @@ public class RequestController {
 
 			return new ResponseEntity<String>(resultObj.getBody(), HttpStatus.OK);
 
-		} catch (Exception e) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
+		
 
 		// return "insert-success";
 	}
@@ -243,10 +245,31 @@ public class RequestController {
 		/* Manager Info */
 
 		/* reportees info */
-
 		employeeResult.setReports(empdao.getReportees(new Integer(employeeId)));
-
 		/* reportees info */
+		
+		/*Collaboration info*/
+		List<Integer> collaborators = collabdao.getCollaborators(new Integer(employeeId));
+		
+		if(collaborators.size() > 0) {
+			List<CollaboratorResult> employeeCollaborators = new ArrayList<CollaboratorResult>();
+			
+			for(int i=0;i<collaborators.size();i++) {
+				EmployeeEntity collaboratorEntity = empdao.getEmployee(collaborators.get(i));
+				
+				CollaboratorResult collaborator = new CollaboratorResult();
+				collaborator.setId(collaborators.get(i));
+				collaborator.setName(collaboratorEntity.getName());
+				collaborator.setTitle(collaboratorEntity.getTitle());
+				
+				employeeCollaborators.add(collaborator);
+			}
+			
+			employeeResult.setCollaborators(employeeCollaborators);
+		}
+		/*Collaboration info*/
+		
+		
 		ObjectMapper obj = new ObjectMapper();
 		result = obj.writeValueAsString(employeeResult);
 
@@ -287,7 +310,20 @@ public class RequestController {
 		
 		ResponseEntity<String> resultObj = getEmployee(employeeId);
 		String result = resultObj.getBody();
+		
+		
+		/*Remove collaborations*/
+		List<CollaborationEntity> employeeCollaborations = collabdao.getEmployeeCollaborations(new Integer(employeeId));
+		
+		for(int i=0;i<employeeCollaborations.size();i++) {
+			collabdao.removeCollaboration(employeeCollaborations.get(i));
+		}
+		/*Remove collaborations*/
+		
 		empdao.removeEmployee(new Integer(employeeId));
+		
+		
+		
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 
