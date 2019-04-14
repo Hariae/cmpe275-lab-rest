@@ -127,7 +127,11 @@ public class RequestController {
 		}
 		/*Manager Info*/
 		
+		/*reportees info*/
 		
+		employeeResult.setReports(empdao.getReportees(new Integer(employeeId)));
+		
+		/*reportees info*/
 
 		ObjectMapper obj = new ObjectMapper();
 		String result = obj.writeValueAsString(employeeResult);

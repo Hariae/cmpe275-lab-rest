@@ -1,5 +1,6 @@
 package jbr.springmvc.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import jbr.springmvc.Employee;
+import jbr.springmvc.EmployeeResult;
 import jbr.springmvc.model.EmployeeEntity;
 
 //import jbr.springmvc.Employee;
@@ -55,12 +58,26 @@ public class EmployeeDaoImpl implements EmployeeDao{
 		return manager.find(EmployeeEntity.class, employeeId);
 	}
 
-	public List<EmployeeEntity> getReportees(Integer employeeId) {
+	public List<EmployeeResult> getReportees(Integer managerId) {
 		// TODO Auto-generated method stub
 		
-		//List<EmployeeEntity> reportees = manager.find(EmployeeEntity.class, manager);
+		List<EmployeeEntity> employees = manager.createQuery("Select a From EmployeeEntity a", EmployeeEntity.class).getResultList();
+		List<EmployeeResult> reportees = new ArrayList<EmployeeResult>();
+		
+		for(int i=0;i<employees.size();i++) {
+			if(employees.get(i).getManager() != null) {
+				if(employees.get(i).getManager().equals(managerId) ) {
+					EmployeeResult reportee = new EmployeeResult();
+					reportee.setId(employees.get(i).getEmployeeId());
+					reportee.setName(employees.get(i).getName());
+					reportee.setTitle(employees.get(i).getTitle());
+					reportees.add(reportee);
+				}	
+			}
+			
+		}
 		
 		
-		return null;
+		return reportees;
 	}
 }

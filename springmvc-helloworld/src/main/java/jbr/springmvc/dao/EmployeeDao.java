@@ -1,5 +1,6 @@
 package jbr.springmvc.dao;
 import jbr.springmvc.Employee;
+import jbr.springmvc.EmployeeResult;
 import jbr.springmvc.model.EmployeeEntity;
 
 import java.util.*;
@@ -13,5 +14,5 @@ public interface EmployeeDao {
 	
 	public EmployeeEntity getEmployee(Integer employeeId);
 	
-	public List<EmployeeEntity> getReportees(Integer employeeId);
+	public List<EmployeeResult> getReportees(Integer employeeId);
 }
