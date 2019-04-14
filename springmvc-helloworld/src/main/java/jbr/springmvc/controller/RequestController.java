@@ -59,7 +59,7 @@ public class RequestController {
 			@RequestParam(value = "zip", required = false) String zip,
 			@RequestParam(value = "managerId", required = false) String managerId,
 			@RequestParam(value = "employerId", required = true) String employerId)
-			throws JsonProcessingException, ManagerNotFoundException {
+			throws Exception {
 		try {
 
 			EmployeeEntity employee = new EmployeeEntity();
@@ -96,7 +96,7 @@ public class RequestController {
 	@ResponseBody
 	@Transactional
 	public String getEmployee(@RequestParam(value = "id", required = true) String employeeId)
-			throws JsonProcessingException {
+			throws Exception {
 
 		EmployeeEntity employee = empdao.getEmployee(new Integer(employeeId));
 
@@ -162,7 +162,7 @@ public class RequestController {
 	@ResponseBody
 	@Transactional
 	public String removeEmployee(@RequestParam(value = "id", required = true) String employeeId)
-			throws JsonProcessingException {
+			throws Exception {
 
 		String result = getEmployee(employeeId);
 		empdao.removeEmployee(new Integer(employeeId));

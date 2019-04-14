@@ -50,10 +50,13 @@ public class EmployerDaoImpl implements EmployerDao{
 		
 	}
 	
-	public EmployerEntity getEmployer(Integer employerId) {
+	public EmployerEntity getEmployer(Integer employerId) throws Exception {
 		// TODO Auto-generated method stub
-		
-		return manager.find(EmployerEntity.class, employerId);
+		try {
+		return manager.find(EmployerEntity.class, employerId);}
+		catch (Exception e) {
+			throw new Exception();
+		}
 	}
 	
 	public void updateEmployer(EmployerEntity employer) {
