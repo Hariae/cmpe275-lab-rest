@@ -225,7 +225,17 @@ public class RequestController {
 		employer.setId(employee.getEmployer());
 		employer.setName(employerEntity.getName());
 		employer.setDescription(employerEntity.getDescription());
-
+		
+		/*Employer address*/
+		Address employerAddress = new Address();
+		
+		String employerAddressParts[] = employerEntity.getAddress().split(",");
+		employerAddress.setStreet(employerAddressParts[0]);
+		employerAddress.setCity(employerAddressParts[1]);
+		employerAddress.setState(employerAddressParts[2]);
+		employerAddress.setZip(employerAddressParts[3]);
+		employer.setAddress(employerAddress);
+		/*Employer address*/
 		employeeResult.setEmployer(employer);
 		/* Employer Info */
 
@@ -273,6 +283,19 @@ public class RequestController {
 				collaboratorEmployer.setId(collaboratorEntity.getEmployer());
 				collaboratorEmployer.setName(collaboratorEmployerEntity.getName());
 				collaboratorEmployer.setDescription(collaboratorEmployerEntity.getDescription());
+				
+				
+				
+				/*Collaborator Employer address*/
+				Address collaboratorEmployerAddress = new Address();
+				
+				String colaboratorEmployerAddressParts[] = collaboratorEmployerEntity.getAddress().split(",");
+				collaboratorEmployerAddress.setStreet(colaboratorEmployerAddressParts[0]);
+				collaboratorEmployerAddress.setCity(colaboratorEmployerAddressParts[1]);
+				collaboratorEmployerAddress.setState(colaboratorEmployerAddressParts[2]);
+				collaboratorEmployerAddress.setZip(colaboratorEmployerAddressParts[3]);
+				collaboratorEmployer.setAddress(collaboratorEmployerAddress);
+				/*Collaborator Employer address*/
 				
 				collaborator.setEmployer(collaboratorEmployer);
 				/*Collaborator Employer*/
