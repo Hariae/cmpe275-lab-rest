@@ -255,6 +255,7 @@ public class RequestController {
 			List<CollaboratorResult> employeeCollaborators = new ArrayList<CollaboratorResult>();
 			
 			for(int i=0;i<collaborators.size();i++) {
+				
 				EmployeeEntity collaboratorEntity = empdao.getEmployee(collaborators.get(i));
 				
 				CollaboratorResult collaborator = new CollaboratorResult();
@@ -262,7 +263,21 @@ public class RequestController {
 				collaborator.setName(collaboratorEntity.getName());
 				collaborator.setTitle(collaboratorEntity.getTitle());
 				
-				employeeCollaborators.add(collaborator);
+				
+				
+				/*Collaborator Employer*/
+				EmployerEntity collaboratorEmployerEntity = new EmployerEntity();
+				collaboratorEmployerEntity = employerdao.getEmployer(collaboratorEntity.getEmployer());
+
+				Employer collaboratorEmployer = new Employer();
+				collaboratorEmployer.setId(collaboratorEntity.getEmployer());
+				collaboratorEmployer.setName(collaboratorEmployerEntity.getName());
+				collaboratorEmployer.setDescription(collaboratorEmployerEntity.getDescription());
+				
+				collaborator.setEmployer(collaboratorEmployer);
+				/*Collaborator Employer*/
+				
+				employeeCollaborators.add(collaborator);	
 			}
 			
 			employeeResult.setCollaborators(employeeCollaborators);

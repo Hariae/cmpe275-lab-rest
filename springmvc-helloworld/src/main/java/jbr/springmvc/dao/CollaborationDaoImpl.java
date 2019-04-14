@@ -76,11 +76,11 @@ public class CollaborationDaoImpl implements CollaborationDao{
 		
 		for(int i=0;i<collaborations.size();i++) {
 			if(collaborations.get(i).getCollab_1().equals(employeeId)){
-				collaborators.add(collaborations.get(i).getCollab_1());
+				collaborators.add(collaborations.get(i).getCollab_2());
 			}
 			
 			if(collaborations.get(i).getCollab_2().equals(employeeId)) {
-				collaborators.add(collaborations.get(i).getCollab_2());
+				collaborators.add(collaborations.get(i).getCollab_1());
 			}
 			
 		}
