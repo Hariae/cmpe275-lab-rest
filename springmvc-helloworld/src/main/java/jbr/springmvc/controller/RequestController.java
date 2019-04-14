@@ -201,10 +201,10 @@ public class RequestController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional
-	public ResponseEntity<String> getEmployee(@RequestParam(value = "id", required = true) String employeeId)
+	public ResponseEntity<String> getEmployee(@PathVariable(value = "id") String employeeId)
 			throws Exception {
 
 		String result = "";
@@ -338,10 +338,10 @@ public class RequestController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	@Transactional
-	public ResponseEntity<String> removeEmployee(@RequestParam(value = "id", required = true) String employeeId) throws Exception {
+	public ResponseEntity<String> removeEmployee(@PathVariable(value = "id") String employeeId) throws Exception {
 		
 		/*Employee Not found*/
 		try {
@@ -379,6 +379,9 @@ public class RequestController {
 			collabdao.removeCollaboration(employeeCollaborations.get(i));
 		}
 		/*Remove collaborations*/
+		
+		
+		
 		
 		empdao.removeEmployee(new Integer(employeeId));
 		
