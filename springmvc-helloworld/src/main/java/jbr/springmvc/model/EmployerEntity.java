@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import jbr.springmvc.Address;
+
 import javax.persistence.*;
 
 
@@ -36,6 +39,10 @@ public class EmployerEntity implements Serializable{
 	
 	public void setName(String name) {
 		Name = name;
+	}
+	
+	public Integer getEmployerId() {
+		return EmployerId;
 	}
 
 	/*

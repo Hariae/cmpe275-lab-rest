@@ -16,6 +16,8 @@ import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import jbr.springmvc.Address;
+import jbr.springmvc.Employer;
 import jbr.springmvc.dao.EmployerDao;
 //import jbr.springmvc.model.EmployeeEntity;
 import jbr.springmvc.model.EmployerEntity;
@@ -57,10 +59,57 @@ public class EmployerController {
 		EmployerEntity employer = new EmployerEntity();
 		System.out.println(name + "Name");
 		employer.setName(name);
-		employer.setAddress(street + "," + state + ", " + city + ", " + state + ", " + zip);
+		employer.setAddress((street != null? street : null) + "," + (city != null? city : null) + ", " + (state != null? state : null) + ", " + (zip != null? zip : null) );
 		employer.setDescription(description);
 		empdao.addEmployer(employer);
 		return "insert-success";
+	}
+	
+	@RequestMapping(method=RequestMethod.PUT) 
+	  @ResponseBody
+	  @Transactional
+	public String updateEmployer(@RequestParam (value="id", required=true) String employerId,
+			@RequestParam (value="name", required=true) String name,
+			@RequestParam (value="street", required=false) String street,
+			@RequestParam (value="city", required=false) String city,
+			@RequestParam (value="state", required=false) String state,
+			@RequestParam (value="zip", required=false) String zip,
+			@RequestParam (value="description", required=false) String description) throws JsonProcessingException {
+		EmployerEntity employer = empdao.getEmployer(new Integer(employerId));
+        
+		if(employer!=null) {
+			employer.setName(name != null? name: employer.getName());
+			Address address = new Address();
+
+			String addressParts[] = employer.getAddress().split(",");
+			address.setStreet(addressParts[0]);
+			address.setCity(addressParts[1]);
+
+			address.setState(addressParts[2]);
+			address.setZip(addressParts[3]);
+			address.setStreet(street != null? street :addressParts[0]);
+			address.setCity(city != null? city :addressParts[1]);
+
+			address.setState(state != null? state :addressParts[2]);
+			address.setZip(zip != null? zip :addressParts[3]);
+			employer.setAddress(address.getStreet() + "," + address.getCity() + ", " + address.getState() + ", " + address.getZip());
+			employer.setDescription(name != null? description : employer.getDescription());
+			empdao.updateEmployer(employer);
+			Employer res = new Employer();
+			res.setId(employer.getEmployerId());
+			res.setName(employer.getName());
+			res.setAddress(address);
+			res.setDescription(employer.getName());			
+			ObjectMapper obj = new ObjectMapper(); 
+		      String result = obj.writeValueAsString(res);
+		      
+				return result;
+			
+		}
+		
+		else { 
+  
+		return "unsuccesful";}
 	}
 	
 }

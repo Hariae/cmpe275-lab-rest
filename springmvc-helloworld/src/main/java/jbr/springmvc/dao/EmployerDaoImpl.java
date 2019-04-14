@@ -55,5 +55,10 @@ public class EmployerDaoImpl implements EmployerDao{
 		
 		return manager.find(EmployerEntity.class, employerId);
 	}
+	
+	public void updateEmployer(EmployerEntity employer) {
+	// TODO Auto-generated method stub
+	manager.persist(employer);
+}
 
 }
