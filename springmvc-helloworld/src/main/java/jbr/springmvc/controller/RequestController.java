@@ -59,7 +59,9 @@ public class RequestController {
 			@RequestParam(value = "zip", required = false) String zip,
 			@RequestParam(value = "managerId", required = false) String managerId,
 			@RequestParam(value = "employerId", required = true) String employerId)
+
 			throws Exception {
+
 		try {
 
 			EmployeeEntity employee = new EmployeeEntity();
@@ -71,21 +73,41 @@ public class RequestController {
 			employee.setAddress(street + ", " + city + ", " + state + ", " + zip);
 			employee.setEmployer(employerId != null ? new Integer(employerId) : null);
 			employee.setManager(managerId != null ? new Integer(managerId) : null);
-			String result = "";
+
+			/* Manager validation */
 			if (managerId != null) {
 				try {
-					result = getEmployee(managerId);
-				} catch (Exception e) {
-					throw new ManagerNotFoundException();
+					EmployeeEntity manager = empdao.getEmployee(new Integer(managerId));
+					if (manager == null) {
+						throw new ManagerNotFoundException();
+					}
+					// String result = getEmployee(managerId);
+				} catch (ManagerNotFoundException e) {
+					return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 				}
-
-				System.out.println(result);
 			}
 
-			Integer employeeId = empdao.addEmployee(employee);
+			/* Manager validation */
 
-			return new ResponseEntity<String>(getEmployee(employeeId.toString()), HttpStatus.OK);
-		} catch (ManagerNotFoundException e) {
+			if (employerId != null) {
+				try {
+					EmployerEntity employer = employerdao.getEmployer(new Integer(employerId));
+					if (employer == null) {
+						throw new EmployerNotFoundException();
+					}
+				} catch (EmployerNotFoundException e) {
+					return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+				}
+
+			}
+
+			System.out.println("outside emp not found");
+			Integer employeeId = empdao.addEmployee(employee);
+			ResponseEntity<String> resultObj = getEmployee(employeeId.toString());
+
+			return new ResponseEntity<String>(resultObj.getBody(), HttpStatus.OK);
+
+		} catch (Exception e) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -95,10 +117,21 @@ public class RequestController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional
-	public String getEmployee(@RequestParam(value = "id", required = true) String employeeId)
+	public ResponseEntity<String> getEmployee(@RequestParam(value = "id", required = true) String employeeId)
 			throws Exception {
 
-		EmployeeEntity employee = empdao.getEmployee(new Integer(employeeId));
+		String result = "";
+		EmployeeEntity employee = null;
+		try {
+			employee = empdao.getEmployee(new Integer(employeeId));
+			System.out.println(employee);
+			if (employee == null) {
+				throw new EmployeeNotFoundException();
+			}
+		} catch (EmployeeNotFoundException e) {
+			System.out.println("Inside catch");
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
 
 		Employee employeeResult = new Employee();
 		employeeResult.setId(employee.getEmployeeId());
@@ -151,22 +184,48 @@ public class RequestController {
 		employeeResult.setReports(empdao.getReportees(new Integer(employeeId)));
 
 		/* reportees info */
-
 		ObjectMapper obj = new ObjectMapper();
-		String result = obj.writeValueAsString(employeeResult);
+		result = obj.writeValueAsString(employeeResult);
 
-		return result;
+		return new ResponseEntity<String>(result, HttpStatus.OK);
+		// return result;
+
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseBody
 	@Transactional
-	public String removeEmployee(@RequestParam(value = "id", required = true) String employeeId)
-			throws Exception {
-
-		String result = getEmployee(employeeId);
+	public ResponseEntity<String> removeEmployee(@RequestParam(value = "id", required = true) String employeeId) throws Exception {
+		
+		/*Employee Not found*/
+		try {
+			EmployeeEntity employee = empdao.getEmployee(new Integer(employeeId));
+			if(employee == null) {
+				throw new EmployeeNotFoundException();
+			}
+		}
+		catch(EmployeeNotFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+		
+		/*Employee Not found*/
+		
+		/*Reportees Found*/
+		try {
+			List<EmployeeResult> reportees = empdao.getReportees(new Integer(employeeId));
+			if(reportees.size() > 0) {
+				throw new ReporteesFoundException();
+			}
+		}
+		catch(ReporteesFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		/*Reportees Found*/
+		
+		ResponseEntity<String> resultObj = getEmployee(employeeId);
+		String result = resultObj.getBody();
 		empdao.removeEmployee(new Integer(employeeId));
-		return result;
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 
 }

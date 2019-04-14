@@ -21,13 +21,13 @@ import jbr.springmvc.model.EmployeeEntity;
 
 @Repository
 @Transactional
-public class EmployeeDaoImpl implements EmployeeDao{
+public class EmployeeDaoImpl implements EmployeeDao {
 
-	 @Autowired
-	  DataSource datasource;
-	  @Autowired
-	  JdbcTemplate jdbcTemplate;
-	  
+	@Autowired
+	DataSource datasource;
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+
 	/*
 	 * public void register(Employee employee) { String sql = "select * from users";
 	 * System.out.println("INSIDE" + jdbcTemplate); List<Map<String, Object>>
@@ -36,57 +36,59 @@ public class EmployeeDaoImpl implements EmployeeDao{
 	 * 
 	 * }
 	 */
-	
+
 	@PersistenceContext
-    private EntityManager manager;
-	
-	public List<EmployeeEntity> getAllEmployees(){
-		List<EmployeeEntity> employees = manager.createQuery("Select a From EmployeeEntity a", EmployeeEntity.class).getResultList();
+	private EntityManager manager;
+
+	public List<EmployeeEntity> getAllEmployees() {
+		List<EmployeeEntity> employees = manager.createQuery("Select a From EmployeeEntity a", EmployeeEntity.class)
+				.getResultList();
 		return employees;
 	}
 
 	public Integer addEmployee(EmployeeEntity employee) {
 		// TODO Auto-generated method stub
-		System.out.println("manager"+ manager);
+		System.out.println("manager" + manager);
 		manager.persist(employee);
-		
+
 		return employee.getEmployeeId();
 	}
 
-	public EmployeeEntity getEmployee(Integer employeeId) {
+	public EmployeeEntity getEmployee(Integer employeeId) throws Exception {
 		// TODO Auto-generated method stub
-		
-		return manager.find(EmployeeEntity.class, employeeId);
+
+		EmployeeEntity result = manager.find(EmployeeEntity.class, employeeId);
+		return result;
 	}
 
 	public List<EmployeeResult> getReportees(Integer managerId) {
 		// TODO Auto-generated method stub
-		
-		List<EmployeeEntity> employees = manager.createQuery("Select a From EmployeeEntity a", EmployeeEntity.class).getResultList();
+
+		List<EmployeeEntity> employees = manager.createQuery("Select a From EmployeeEntity a", EmployeeEntity.class)
+				.getResultList();
 		List<EmployeeResult> reportees = new ArrayList<EmployeeResult>();
-		
-		for(int i=0;i<employees.size();i++) {
-			if(employees.get(i).getManager() != null) {
-				if(employees.get(i).getManager().equals(managerId) ) {
+
+		for (int i = 0; i < employees.size(); i++) {
+			if (employees.get(i).getManager() != null) {
+				if (employees.get(i).getManager().equals(managerId)) {
 					EmployeeResult reportee = new EmployeeResult();
 					reportee.setId(employees.get(i).getEmployeeId());
 					reportee.setName(employees.get(i).getName());
 					reportee.setTitle(employees.get(i).getTitle());
 					reportees.add(reportee);
-				}	
+				}
 			}
-			
+
 		}
-		
-		
+
 		return reportees;
 	}
 
 	public void removeEmployee(Integer employeeId) {
 		// TODO Auto-generated method stub
-		
+
 		EmployeeEntity employee = manager.find(EmployeeEntity.class, employeeId);
 		manager.remove(employee);
-		//return employeeId;
+		// return employeeId;
 	}
 }

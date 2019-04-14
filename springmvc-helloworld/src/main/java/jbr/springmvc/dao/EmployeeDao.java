@@ -12,7 +12,7 @@ public interface EmployeeDao {
 	
 	public Integer addEmployee(EmployeeEntity employee);
 	
-	public EmployeeEntity getEmployee(Integer employeeId);
+	public EmployeeEntity getEmployee(Integer employeeId) throws Exception;
 	
 	public List<EmployeeResult> getReportees(Integer employeeId);
 	
