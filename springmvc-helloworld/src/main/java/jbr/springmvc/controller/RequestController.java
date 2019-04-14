@@ -121,12 +121,15 @@ public class RequestController {
 	  @Transactional
 	  public ResponseEntity<String> updateEmployee(
 			  @PathVariable("id") Integer employeeId,
-			  @RequestParam (value="name", required=true) String name,
+			  @RequestParam (value="name", required=false) String name,
 			  @RequestParam (value="email", required=true) String email,
-			  @RequestParam (value="title", required=true) String title,
-			  @RequestParam (value="employer", required=true) Integer employer,
-			  @RequestParam (value="manager", required=true) Integer newManager,
-			  @RequestParam (value="address", required=false) String address) throws Exception
+			  @RequestParam (value="title", required=false) String title,
+			  @RequestParam (value="employerId", required=false) Integer employer,
+			  @RequestParam (value="managerId", required=false) Integer newManager,
+			  @RequestParam (value="street", required=false) String street,
+			  @RequestParam (value="city", required=false) String city,
+			  @RequestParam (value="state", required=false) String state,
+			  @RequestParam (value="zip", required=false) String zipcode) throws Exception
 			  {
 		try {
 			if(empdao.getEmployee(employeeId)==null) {
@@ -134,28 +137,33 @@ public class RequestController {
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
 		EmployeeEntity employee = empdao.getEmployee(employeeId);
-		
-		System.out.println("get get get get get"+employee.getName());
-		
-//		trying to change manager
-//		Integer oldManager = employee.getManager();
-//		EmployeeEntity oldManagerEntity = empdao.getEmployee(oldManager);
-		String result = null;
+						
 		EmployeeEntity newManagerEntity = empdao.getEmployee(newManager);
-		System.out.println("new Manager id "+newManager);
-//		System.out.println("old Manager company "+oldManagerEntity.getEmployer());
-		System.out.println("new Manager company "+newManagerEntity.getEmployer());
 		ObjectMapper obj = new ObjectMapper(); 
-		System.out.println("updateReturnObj"+obj);
+		
 		if(employer==newManagerEntity.getEmployer()) {
 			System.out.println("success");
+			if(name!=null) employee.setName(name);
+			if(title!=null) employee.setTitle(title);
+			//if(employer!=null) employee.setEmployer(employer);
+			//if(newManager!=null) employee.setManager(newManager);
+			
+			String newStreet = street!=null ? street: employee.getAddress().split(",")[0];
+			String newCity = city!=null ? city: employee.getAddress().split(",")[1]; 
+			String newState = state!=null ? state: employee.getAddress().split(",")[2]; 
+			String newZipcode = zipcode!=null ? zipcode: employee.getAddress().split(",")[3]; 
+			
+			String newAddress = newStreet+","+newCity+","+newState+","+newZipcode;
+			System.out.println("newAddress"+newAddress);
+			employee.setAddress(newAddress);
+						
 			employee.setName(name);
 			employee.setEmail(email);
 			employee.setTitle(title);
 			
 			/*Employer changes*/
-			
-			employee.setEmployer(employer);
+			if(employer!=null) employee.setEmployer(employer);
+			//employee.setEmployer(employer);
 			
 			
 			List<EmployeeResult> reportees = empdao.getReportees(employeeId);
@@ -172,34 +180,32 @@ public class RequestController {
 				reportee.setManager(managerId);
 				empdao.addEmployee(reportee);
 			}
-			
-			employee.setManager(newManager);
+			if(newManager!=null) employee.setManager(newManager);
+			//employee.setManager(newManager);
 			/*Employer changes*/
 			
 			//employee.setAddress(address);
 			empdao.addEmployee(employee);
 			
-				System.out.println("employee is is is "+employee.getEmail());
-				result = obj.writeValueAsString(employee);
-				 return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
-
+			ResponseEntity<String> resultObj = getEmployee(employeeId.toString());
+				System.out.println("resultObj.getBody()"+resultObj.getBody());
+				 return new ResponseEntity<String>(resultObj.getBody(), HttpStatus.ACCEPTED);
 			}
 		else {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 		}
 		catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			if(java.lang.Double.isNaN(employeeId)) {
 				System.out.println("no id");
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
 			 
-//			return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
 			else
 			return new ResponseEntity<String>("400", HttpStatus.BAD_REQUEST);
 		}
 	}
+
 
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	@ResponseBody
