@@ -43,6 +43,7 @@ public class EmployerController {
 	@Transactional
 	public ResponseEntity<String> getEmployer(@PathVariable("id") String employerId) throws JsonProcessingException {
 		EmployerEntity employer;
+		/*Validation*/
 		try {
 			employer = empdao.getEmployer(new Integer(employerId));
 			if(employer==null) {
@@ -51,7 +52,9 @@ public class EmployerController {
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
-			
+		/*Validation*/
+		
+		/* Address */
 			Address address = new Address();
 
 			String addressParts[] = employer.getAddress().split(",");
@@ -60,20 +63,19 @@ public class EmployerController {
 
 			address.setState(addressParts[2]);
 			address.setZip(addressParts[3]);
+		/* Address */
+		
+		/* Employer Info */
 			Employer res = new Employer();
 			res.setId(employer.getEmployerId());
 			res.setName(employer.getName());
 			res.setAddress(address);
 			res.setDescription(employer.getName());
+		/* Employer Info */
+			
 			ObjectMapper obj = new ObjectMapper();
 			String result = obj.writeValueAsString(res);
 			return new ResponseEntity<String>(result, HttpStatus.OK);
-
-
-		// System.out.println(employer.getName());
-		// JsonObject result = Json.createObjectBuilder
-		// Creating Object of ObjectMapper define in Jakson Api
-		// try {
 	}
 
 	  @RequestMapping(method=RequestMethod.POST)
@@ -94,13 +96,18 @@ public class EmployerController {
 	  @RequestParam (value="description", required=false) String description)
 	  throws JsonProcessingException {
 	  
-	  
-	  EmployerEntity employer = new EmployerEntity(); System.out.println(name +
-	  "Name"); employer.setName(name); employer.setAddress((street != null? street
+		  /* Employer Info */
+	  EmployerEntity employer = new EmployerEntity(); 
+	 
+	  employer.setName(name); 
+	    /* Address */
+	  employer.setAddress((street != null? street
 	  : null) + "," + (city != null? city : null) + ", " + (state != null? state :
 	  null) + ", " + (zip != null? zip : null) );
-	  
+	    /* Address */
 	  employer.setDescription(description); empdao.addEmployer(employer);
+	  /* Employer Info */
+	  
 	  return getEmployer(String.valueOf(employer.getEmployerId())); }
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -115,6 +122,8 @@ public class EmployerController {
 			@RequestParam(value = "description", required = false) String description)
 			throws NumberFormatException, Exception {
 		EmployerEntity employer ;
+		
+		/*Validation*/
 		try {
 			employer = empdao.getEmployer(new Integer(employerId));
 
@@ -124,7 +133,11 @@ public class EmployerController {
 		catch (Exception e){
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		}
+		/*Validation*/
+		
+		/* Employer Info */
 			employer.setName(name != null ? name : employer.getName());
+			/* Address */
 			Address address = new Address();
 
 			String addressParts[] = employer.getAddress().split(",");
@@ -138,15 +151,24 @@ public class EmployerController {
 
 			address.setState(state != null ? state : addressParts[2]);
 			address.setZip(zip != null ? zip : addressParts[3]);
+			
+			/* Address */
+			
 			employer.setAddress(address.getStreet() + "," + address.getCity() + ", " + address.getState() + ", "
 					+ address.getZip());
 			employer.setDescription(name != null ? description : employer.getDescription());
+		/* Employer Info */
+			
 			empdao.updateEmployer(employer);
+			
+			/* Employer updated Info */
 			Employer res = new Employer();
 			res.setId(employer.getEmployerId());
 			res.setName(employer.getName());
 			res.setAddress(address);
 			res.setDescription(employer.getName());
+			/* Employer updated Info */
+			
 			ObjectMapper obj = new ObjectMapper();
 			String result = obj.writeValueAsString(res);
 
@@ -165,6 +187,8 @@ public class EmployerController {
 		  
 			EmployerEntity employer;
 			List<EmployeeEntity> list;
+			
+			/*Validation*/
 			try {
 				employer = empdao.getEmployer(new Integer(employerId));
 
@@ -185,17 +209,16 @@ public class EmployerController {
 			catch (Exception e){
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
+			
+			/*Validation*/
+			
+		/*Is Exist*/
 		  ResponseEntity<String> result= getEmployer(employerId);
+		 /*Is Exist*/
+		  
 		  empdao.deleteEmployer(new Integer(employerId));
-		  System.out.println("deletion"); return result;
-		  
-		  
-		  
-		  
-		
-		 
-		  
-		  
+		  System.out.println("deletion"); 
+		  return result;
 
 	   
 	  }

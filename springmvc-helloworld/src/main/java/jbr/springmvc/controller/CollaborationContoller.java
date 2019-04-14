@@ -26,10 +26,10 @@ public class CollaborationContoller {
 	@Autowired
 	public EmployeeDao empdao;
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/{id1}/{id2}",method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional
-	public ResponseEntity<String> addCollaboration(@RequestParam(value = "id1", required = true) String collaborator_1, @RequestParam(value = "id2", required = true) String collaborator_2 ) throws NumberFormatException, Exception {
+	public ResponseEntity<String> addCollaboration(@PathVariable("id1") String collaborator_1, @PathVariable("id2") String collaborator_2 ) throws NumberFormatException, Exception {
 		
 		
 		/*Validation*/
@@ -64,10 +64,10 @@ public class CollaborationContoller {
 		return new ResponseEntity<String>("Add Collaboration Success", HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id1}/{id2}",method = RequestMethod.DELETE)
 	@ResponseBody
 	@Transactional
-	public ResponseEntity<String> removeCollaboration(@RequestParam(value = "id1", required = true) String collaborator_1, @RequestParam(value = "id2", required = true) String collaborator_2) throws NumberFormatException, Exception {
+	public ResponseEntity<String> removeCollaboration(@PathVariable("id1") String collaborator_1, @PathVariable("id2") String collaborator_2 ) throws NumberFormatException, Exception {
 		
 		/*Validation*/
 		try {
