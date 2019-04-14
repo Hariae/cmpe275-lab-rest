@@ -1,7 +1,8 @@
 package jbr.springmvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +50,7 @@ public class RequestController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional
-	public String insertEmployee(@RequestParam(value = "name", required = true) String name,
+	public ResponseEntity<String> insertEmployee(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "email", required = true) String email,
 			@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "street", required = false) String street,
@@ -57,20 +58,38 @@ public class RequestController {
 			@RequestParam(value = "state", required = false) String state,
 			@RequestParam(value = "zip", required = false) String zip,
 			@RequestParam(value = "managerId", required = false) String managerId,
-			@RequestParam(value = "employerId", required = false) String employerId) {
+			@RequestParam(value = "employerId", required = true) String employerId)
+			throws JsonProcessingException, ManagerNotFoundException {
+		try {
 
-		EmployeeEntity employee = new EmployeeEntity();
-		// String Name = name;
-		System.out.println(name + "Name");
-		employee.setName(name);
-		employee.setEmail(email);
-		employee.setTitle(title);
-		employee.setAddress(street + ", " + city + ", " + state + ", " + zip);
-		employee.setEmployer(employerId != null ? new Integer(employerId) : null);
-		employee.setManager(managerId != null ? new Integer(managerId) : null);
+			EmployeeEntity employee = new EmployeeEntity();
+			// String Name = name;
+			System.out.println(name + "Name");
+			employee.setName(name);
+			employee.setEmail(email);
+			employee.setTitle(title);
+			employee.setAddress(street + ", " + city + ", " + state + ", " + zip);
+			employee.setEmployer(employerId != null ? new Integer(employerId) : null);
+			employee.setManager(managerId != null ? new Integer(managerId) : null);
+			String result = "";
+			if (managerId != null) {
+				try {
+					result = getEmployee(managerId);
+				} catch (Exception e) {
+					throw new ManagerNotFoundException();
+				}
 
-		empdao.addEmployee(employee);
-		return "insert-success";
+				System.out.println(result);
+			}
+
+			Integer employeeId = empdao.addEmployee(employee);
+
+			return new ResponseEntity<String>(getEmployee(employeeId.toString()), HttpStatus.OK);
+		} catch (ManagerNotFoundException e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+
+		// return "insert-success";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -111,27 +130,42 @@ public class RequestController {
 
 		employeeResult.setEmployer(employer);
 		/* Employer Info */
-		
-		/*Manager Info*/
+
+		/* Manager Info */
 		System.out.println("Manager ID" + employee.getManager());
-		if(employee.getManager() != null) {
+		if (employee.getManager() != null) {
 			EmployeeEntity managerEntity = empdao.getEmployee(employee.getManager());
-			
+
 			EmployeeResult manager = new EmployeeResult();
 			manager.setId(employee.getManager());
 			manager.setName(managerEntity.getName());
 			manager.setTitle(managerEntity.getTitle());
-			
+
 			employeeResult.setManager(manager);
-				
+
 		}
-		/*Manager Info*/
-		
-		
+		/* Manager Info */
+
+		/* reportees info */
+
+		employeeResult.setReports(empdao.getReportees(new Integer(employeeId)));
+
+		/* reportees info */
 
 		ObjectMapper obj = new ObjectMapper();
 		String result = obj.writeValueAsString(employeeResult);
 
+		return result;
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseBody
+	@Transactional
+	public String removeEmployee(@RequestParam(value = "id", required = true) String employeeId)
+			throws JsonProcessingException {
+
+		String result = getEmployee(employeeId);
+		empdao.removeEmployee(new Integer(employeeId));
 		return result;
 	}
 
