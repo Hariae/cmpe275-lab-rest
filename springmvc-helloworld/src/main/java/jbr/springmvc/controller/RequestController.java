@@ -67,17 +67,17 @@ public class RequestController {
 			@RequestParam(value = "employerId", required = true) String employerId)
 
 			throws Exception {
-		
-		/*Email -validation*/
+
+		/* Email -validation */
 		List<EmployeeEntity> employees = empdao.getAllEmployees();
-		
-		for(int i=0;i<employees.size();i++) {
-			if(employees.get(i).getEmail().equals(email)) {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST); 
+
+		for (int i = 0; i < employees.size(); i++) {
+			if (employees.get(i).getEmail().equals(email)) {
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
 		}
-		
-		/*Email -validation*/
+
+		/* Email -validation */
 
 		EmployeeEntity employee = new EmployeeEntity();
 		// String Name = name;
@@ -125,94 +125,215 @@ public class RequestController {
 		// return "insert-success";
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	@ResponseBody
-	@Transactional
-	public ResponseEntity<String> updateEmployee(@PathVariable("id") Integer employeeId,
-			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "email", required = true) String email,
-			@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "employerId", required = false) Integer employer,
-			@RequestParam(value = "managerId", required = false) Integer newManager,
-			@RequestParam(value = "street", required = false) String street,
-			@RequestParam(value = "city", required = false) String city,
-			@RequestParam(value = "state", required = false) String state,
-			@RequestParam(value = "zip", required = false) String zipcode) throws Exception {
+	/*
+	 * @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	 * 
+	 * @ResponseBody
+	 * 
+	 * @Transactional public ResponseEntity<String>
+	 * updateEmployee(@PathVariable("id") Integer employeeId,
+	 * 
+	 * @RequestParam(value = "name", required = false) String name,
+	 * 
+	 * @RequestParam(value = "email", required = true) String email,
+	 * 
+	 * @RequestParam(value = "title", required = false) String title,
+	 * 
+	 * @RequestParam(value = "employerId", required = false) Integer employer,
+	 * 
+	 * @RequestParam(value = "managerId", required = false) Integer newManager,
+	 * 
+	 * @RequestParam(value = "street", required = false) String street,
+	 * 
+	 * @RequestParam(value = "city", required = false) String city,
+	 * 
+	 * @RequestParam(value = "state", required = false) String state,
+	 * 
+	 * @RequestParam(value = "zip", required = false) String zipcode) throws
+	 * Exception { try { if (empdao.getEmployee(employeeId) == null) {
+	 * System.out.println("no such employee id"); return new
+	 * ResponseEntity<String>(HttpStatus.BAD_REQUEST); } EmployeeEntity employee =
+	 * empdao.getEmployee(employeeId);
+	 * 
+	 * EmployeeEntity newManagerEntity = empdao.getEmployee(newManager);
+	 * ObjectMapper obj = new ObjectMapper();
+	 * 
+	 * if (employer == newManagerEntity.getEmployer()) {
+	 * System.out.println("success"); if (name != null) employee.setName(name); if
+	 * (title != null) employee.setTitle(title); // if(employer!=null)
+	 * employee.setEmployer(employer); // if(newManager!=null)
+	 * employee.setManager(newManager);
+	 * 
+	 * String newStreet = street != null ? street :
+	 * employee.getAddress().split(",")[0]; String newCity = city != null ? city :
+	 * employee.getAddress().split(",")[1]; String newState = state != null ? state
+	 * : employee.getAddress().split(",")[2]; String newZipcode = zipcode != null ?
+	 * zipcode : employee.getAddress().split(",")[3];
+	 * 
+	 * String newAddress = newStreet + "," + newCity + "," + newState + "," +
+	 * newZipcode; System.out.println("newAddress" + newAddress);
+	 * employee.setAddress(newAddress);
+	 * 
+	 * employee.setName(name); employee.setEmail(email); employee.setTitle(title);
+	 * 
+	 * Employer changes if (employer != null) employee.setEmployer(employer); //
+	 * employee.setEmployer(employer);
+	 * 
+	 * List<EmployeeResult> reportees = empdao.getReportees(employeeId);
+	 * 
+	 * Integer managerId = null; if (employee.getManager() != null) { managerId =
+	 * employee.getManager(); }
+	 * 
+	 * // edit reportees
+	 * 
+	 * for (int i = 0; i < reportees.size(); i++) { EmployeeEntity reportee =
+	 * empdao.getEmployee(reportees.get(i).getId()); reportee.setManager(managerId);
+	 * empdao.addEmployee(reportee); } if (newManager != null)
+	 * employee.setManager(newManager); // employee.setManager(newManager); Employer
+	 * changes
+	 * 
+	 * // employee.setAddress(address); empdao.addEmployee(employee);
+	 * 
+	 * ResponseEntity<String> resultObj = getEmployee(employeeId.toString());
+	 * System.out.println("resultObj.getBody()" + resultObj.getBody()); return new
+	 * ResponseEntity<String>(resultObj.getBody(), HttpStatus.ACCEPTED); } else {
+	 * return new ResponseEntity<String>(HttpStatus.BAD_REQUEST); } } catch
+	 * (JsonProcessingException e) { if (java.lang.Double.isNaN(employeeId)) {
+	 * System.out.println("no id"); return new
+	 * ResponseEntity<String>(HttpStatus.BAD_REQUEST); }
+	 * 
+	 * else return new ResponseEntity<String>("400", HttpStatus.BAD_REQUEST); } }
+	 */
+	
+	@RequestMapping(value = "/{id}", method=RequestMethod.PUT) 
+	  @ResponseBody
+	  @Transactional
+	  public ResponseEntity<String> updateEmployee(
+			  @PathVariable("id") Integer employeeId,
+			  @RequestParam (value="name", required=false) String name,
+			  @RequestParam (value="email", required=true) String email,
+			  @RequestParam (value="title", required=false) String title,
+			  @RequestParam (value="employerId", required=false) Integer employer,
+			  @RequestParam (value="managerId", required=false) Integer newManager,
+			  @RequestParam (value="street", required=false) String street,
+			  @RequestParam (value="city", required=false) String city,
+			  @RequestParam (value="state", required=false) String state,
+			  @RequestParam (value="zip", required=false) String zipcode) throws Exception
+			  {
 		try {
-			if (empdao.getEmployee(employeeId) == null) {
+			if(empdao.getEmployee(employeeId)==null) {
 				System.out.println("no such employee id");
+				return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+			}
+		EmployeeEntity employee = empdao.getEmployee(employeeId);
+						
+		ObjectMapper obj = new ObjectMapper(); 
+		
+		boolean trueCondition = false;
+		
+		// manager != null; employer != null ; 
+		
+		//manager is present
+		
+		if(newManager != null) {
+			EmployeeEntity checkManager = empdao.getEmployee(newManager);
+			if(checkManager == null) {
 				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 			}
-			EmployeeEntity employee = empdao.getEmployee(employeeId);
-
+		}
+		
+		if(employer != null) {
+			EmployerEntity checkEmployer = employerdao.getEmployer(employer);
+			if(checkEmployer == null) {
+				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		
+		
+		if(employer==null && newManager==null) {
+			trueCondition = true;
+		}
+		if(employer!=null && newManager!=null) {
 			EmployeeEntity newManagerEntity = empdao.getEmployee(newManager);
-			ObjectMapper obj = new ObjectMapper();
-
-			if (employer == newManagerEntity.getEmployer()) {
-				System.out.println("success");
-				if (name != null)
-					employee.setName(name);
-				if (title != null)
-					employee.setTitle(title);
-				// if(employer!=null) employee.setEmployer(employer);
-				// if(newManager!=null) employee.setManager(newManager);
-
-				String newStreet = street != null ? street : employee.getAddress().split(",")[0];
-				String newCity = city != null ? city : employee.getAddress().split(",")[1];
-				String newState = state != null ? state : employee.getAddress().split(",")[2];
-				String newZipcode = zipcode != null ? zipcode : employee.getAddress().split(",")[3];
-
-				String newAddress = newStreet + "," + newCity + "," + newState + "," + newZipcode;
-				System.out.println("newAddress" + newAddress);
-				employee.setAddress(newAddress);
-
-				employee.setName(name);
-				employee.setEmail(email);
-				employee.setTitle(title);
-
-				/* Employer changes */
-				if (employer != null)
-					employee.setEmployer(employer);
-				// employee.setEmployer(employer);
-
-				List<EmployeeResult> reportees = empdao.getReportees(employeeId);
-
-				Integer managerId = null;
-				if (employee.getManager() != null) {
-					managerId = employee.getManager();
-				}
-
-				// edit reportees
-
-				for (int i = 0; i < reportees.size(); i++) {
-					EmployeeEntity reportee = empdao.getEmployee(reportees.get(i).getId());
-					reportee.setManager(managerId);
-					empdao.addEmployee(reportee);
-				}
-				if (newManager != null)
-					employee.setManager(newManager);
-				// employee.setManager(newManager);
-				/* Employer changes */
-
-				// employee.setAddress(address);
-				empdao.addEmployee(employee);
-
-				ResponseEntity<String> resultObj = getEmployee(employeeId.toString());
-				System.out.println("resultObj.getBody()" + resultObj.getBody());
-				return new ResponseEntity<String>(resultObj.getBody(), HttpStatus.ACCEPTED);
-			} else {
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			if(employer==newManagerEntity.getEmployer()) trueCondition = true;
+		}
+		if(employer==null && newManager!=null) {
+			EmployeeEntity newManagerEntity = empdao.getEmployee(newManager);
+			if(employee.getEmployer()==newManagerEntity.getEmployer()) {
+				trueCondition = true;
 			}
-		} catch (JsonProcessingException e) {
-			if (java.lang.Double.isNaN(employeeId)) {
-				System.out.println("no id");
-				return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		if(employer!=null && newManager==null) {
+			EmployeeEntity managerCompany = empdao.getEmployee(employee.getManager());
+			if(employer==managerCompany.getEmployer()) {
+				trueCondition = true;
 			}
-
+		}
+		
+		if(trueCondition) {
+			System.out.println("success");
+			if(name!=null) employee.setName(name);
+			employee.setEmail(email);
+			if(title!=null) employee.setTitle(title);
+			//if(employer!=null) employee.setEmployer(employer);
+			//if(newManager!=null) employee.setManager(newManager);
+			
+			String newStreet = street!=null ? street: employee.getAddress().split(",")[0];
+			String newCity = city!=null ? city: employee.getAddress().split(",")[1]; 
+			String newState = state!=null ? state: employee.getAddress().split(",")[2]; 
+			String newZipcode = zipcode!=null ? zipcode: employee.getAddress().split(",")[3]; 
+			
+			String newAddress = newStreet+","+newCity+","+newState+","+newZipcode;
+			System.out.println("newAddress"+newAddress);
+			employee.setAddress(newAddress);
+						
+			
+			
+			/*Employer changes*/
+			if(employer!=null) employee.setEmployer(employer);
+			//employee.setEmployer(employer);
+			
+			
+			List<EmployeeResult> reportees = empdao.getReportees(employeeId);
+			
+			Integer managerId = null;
+			if(employee.getManager() != null) {
+				managerId = employee.getManager();
+			}
+			
+			//edit reportees
+			
+			for(int i=0;i<reportees.size();i++) {
+				EmployeeEntity reportee = empdao.getEmployee(reportees.get(i).getId());
+				reportee.setManager(managerId);
+				empdao.addEmployee(reportee);
+			}
+			if(newManager!=null) employee.setManager(newManager);
+			//employee.setManager(newManager);
+			/*Employer changes*/
+			
+			//employee.setAddress(address);
+			empdao.addEmployee(employee);
+			
+			ResponseEntity<String> resultObj = getEmployee(employeeId.toString());
+				System.out.println("resultObj.getBody()"+resultObj.getBody());
+				 return new ResponseEntity<String>(resultObj.getBody(), HttpStatus.ACCEPTED);
+			}
+		else {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		}
+		catch (JsonProcessingException e) {
+			if(java.lang.Double.isNaN(employeeId)) {
+				return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+			}
+			 
 			else
-				return new ResponseEntity<String>("400", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("400", HttpStatus.BAD_REQUEST);
 		}
 	}
+
+
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
